@@ -16,8 +16,14 @@ const server = http.createServer(app) // socket.io supports http // created from
 //Initiliaze socket.io server
 
 export const io = new Server(server, {
-    cors: {origin: "*"} //allows all origin
-})
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  }
+});
+
+
 
 
 // Store online users
@@ -74,8 +80,17 @@ But that's not related to express.json() — it’s just a feature of res.json()
 //all the req to this server will be passed using json method
 //4mb of images uploaded
 
-app.use(express.json()) 
-app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+
+app.use(cors({
+  origin: "http://localhost:5173", // your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // allow cookies or Authorization headers if needed
+}));
+
+
 
 app.use("/api/status", (req, res) => res.send("Server is live"))//is a route handler in Express that defines a simple HTTP endpoint. we use thit url to see the server statue
 //http://localhost:5000/api/status
